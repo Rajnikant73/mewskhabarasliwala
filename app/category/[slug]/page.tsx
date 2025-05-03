@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
   const category = categories.find(cat => cat.slug === params.slug);
   
   return {
-    title: `${category?.name || 'श्रेणी'} | म्युज खबर`,
+    title: `${category?.name || 'श्रेणी'} | मेउज खबर`,
     description: category?.description || 'यस श्रेणीका समाचारहरू',
   };
 }

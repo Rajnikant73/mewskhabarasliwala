@@ -14,7 +14,7 @@ export default async function Home() {
     getLatestPosts(10).catch(() => []),
     getCategories().catch(() => [])
   ]);
-
+  console.log('LATEST POST:', JSON.stringify(latestPosts[0], null, 2));
   const featuredPost = latestPosts[0];
   const sidebarPosts = latestPosts.slice(1, 4);
 

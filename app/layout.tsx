@@ -8,7 +8,7 @@ import Footer from '@/components/layout/Footer';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'म्युज खबर - हाम्रो लुम्बिनी, हाम्रो खबर',
+  title: 'मेउज खबर - हाम्रो लुम्बिनी, हाम्रो खबर',
   description: 'राजनीति, अर्थतन्त्र, खेलकुद, मनोरञ्जन लगायत नेपालभरको ताजा समाचार',
 };
 

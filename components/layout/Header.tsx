@@ -2,33 +2,26 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Moon, Sun, Search, Menu, X, Bell } from 'lucide-react';
+import { Moon, Sun, Menu, X, Bell, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTheme } from 'next-themes';
-import { Input } from '@/components/ui/input';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 
 export default function Header() {
   const { theme, setTheme } = useTheme();
   const [scrolled, setScrolled] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState({ open: false, news: false });
   const [mounted, setMounted] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [notifications, setNotifications] = useState(3);
 
   useEffect(() => {
     setMounted(true);
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
-    };
-
+    const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -36,142 +29,118 @@ export default function Header() {
   if (!mounted) return null;
 
   return (
-    <header className={cn(
-      'sticky top-0 z-50 w-full transition-all duration-300',
-      scrolled ? 'bg-background/80 backdrop-blur-md shadow-sm' : 'bg-background'
-    )}>
+    <header
+      className={cn(
+        'sticky top-0 z-50 w-full transition-all duration-300 text-white',
+        'bg-[#0077FF]'
+      )}
+    >
       <div className="container mx-auto px-4">
         <div className="h-16 flex items-center justify-between">
-          <div className="flex items-center gap-8">
-            <Link href="/" className="font-bold text-2xl text-primary">
-              Mews Khabar
-            </Link>
-            
-            <nav className="hidden lg:flex items-center space-x-6">
-              <Link 
-                href="/category/politics" 
-                className="hover:text-primary transition-colors"
-              >
-                Politics
-              </Link>
-              <Link 
-                href="/category/sports" 
-                className="hover:text-primary transition-colors"
-              >
-                Sports
-              </Link>
-            </nav>
-          </div>
+          {/* Logo */}
+          <Link href="/" className="font-bold text-xl tracking-wide text-white">
+            Mews Khabar
+          </Link>
 
-          <div className="hidden lg:flex items-center space-x-4">
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <Search size={20} />
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <div className="grid gap-4">
-                  <h4 className="font-medium leading-none">Search News</h4>
-                  <Input
-                    placeholder="Search articles..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="col-span-3"
-                  />
-                </div>
-              </DialogContent>
-            </Dialog>
-
+          {/* Desktop Nav */}
+          <nav className="hidden lg:flex items-center space-x-6 text-sm font-medium text-white">
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="relative">
-                  <Bell size={20} />
-                  {notifications > 0 && (
-                    <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full" />
-                  )}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-[300px]">
-                <div className="p-2">
-                  <h4 className="font-medium mb-2">Notifications</h4>
-                  {notifications > 0 ? (
-                    <div className="space-y-2">
-                      {[...Array(notifications)].map((_, i) => (
-                        <div key={i} className="p-2 hover:bg-accent rounded-md cursor-pointer">
-                          <p className="text-sm font-medium">New article published</p>
-                          <p className="text-xs text-muted-foreground">2 minutes ago</p>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-sm text-muted-foreground">No new notifications</p>
-                  )}
-                </div>
+              <DropdownMenuTrigger className="hover:text-gray-300">News</DropdownMenuTrigger>
+              <DropdownMenuContent className="text-black">
+                {['Politics', 'Business', 'Tech', 'International'].map((label) => (
+                  <DropdownMenuItem key={label}>
+                    <Link href={`/category/${label.toLowerCase()}`}>{label}</Link>
+                  </DropdownMenuItem>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
+            <Link href="/rental" className="hover:text-gray-300">Rental</Link>
+            <Link href="/coupons" className="hover:text-gray-300">Coupons</Link>
+          </nav>
 
+          {/* Right Controls */}
+          <div className="hidden lg:flex items-center space-x-2">
+            <Button variant="ghost" size="icon" className="text-white hover:text-gray-300">
+              <Bell size={20} />
+            </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="relative w-9 h-9">
-                  <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                  <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                  <span className="sr-only">Toggle theme</span>
+                <Button variant="ghost" size="icon" className="text-white hover:text-gray-300">
+                  <Sun className="h-5 w-5 dark:hidden" />
+                  <Moon className="h-5 w-5 hidden dark:block" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setTheme("light")}>
-                  <Sun className="mr-2 h-4 w-4" />
-                  <span>Light</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme("dark")}>
-                  <Moon className="mr-2 h-4 w-4" />
-                  <span>Dark</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme("system")}>
-                  <span className="mr-2">💻</span>
-                  <span>System</span>
-                </DropdownMenuItem>
+              <DropdownMenuContent align="end" className="text-black">
+                <DropdownMenuItem onClick={() => setTheme('light')}>Light</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme('dark')}>Dark</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme('system')}>System</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
 
-          <div className="flex lg:hidden items-center space-x-2">
-            <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-              {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          {/* Mobile Toggle */}
+          <div className="lg:hidden">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-white"
+              onClick={() => setIsMenuOpen((prev) => ({ ...prev, open: !prev.open }))}
+            >
+              {isMenuOpen.open ? <X size={20} /> : <Menu size={20} />}
             </Button>
           </div>
         </div>
       </div>
 
-      {/* Mobile menu */}
-      {isMenuOpen && (
-        <div className="lg:hidden bg-background border-t py-4">
-          <div className="container mx-auto px-4">
-            <nav className="space-y-2 mb-4">
-              <Link 
-                href="/category/politics" 
-                className="block px-4 py-2 rounded-md hover:bg-accent transition-colors"
-                onClick={() => setIsMenuOpen(false)}
+      {/* Mobile Menu */}
+      {isMenuOpen.open && (
+        <div className="lg:hidden bg-[#0077FF] border-t border-blue-600 text-white">
+          <div className="p-4 space-y-4">
+            {/* News Accordion */}
+            <div>
+              <button
+                onClick={() => setIsMenuOpen((prev) => ({ ...prev, news: !prev.news }))}
+                className="w-full flex justify-between items-center text-left text-sm font-semibold"
               >
-                Politics
-              </Link>
-              <Link 
-                href="/category/sports" 
-                className="block px-4 py-2 rounded-md hover:bg-accent transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Sports
-              </Link>
-            </nav>
-            <div className="mt-4">
-              <Input
-                placeholder="Search articles..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full"
-              />
+                News
+                <ChevronDown
+                  size={18}
+                  className={`transition-transform ${isMenuOpen.news ? 'rotate-180' : ''}`}
+                />
+              </button>
+              {isMenuOpen.news && (
+                <div className="pl-4 mt-2 space-y-2 text-sm">
+                  {['Politics', 'Business', 'Tech', 'International'].map((label) => (
+                    <Link
+                      key={label}
+                      href={`/category/${label.toLowerCase()}`}
+                      className="block hover:text-gray-300"
+                      onClick={() => setIsMenuOpen({ open: false, news: false })}
+                    >
+                      {label}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
+
+            {/* Rental */}
+            <Link
+              href="/rental"
+              className="block text-sm font-semibold hover:text-gray-300"
+              onClick={() => setIsMenuOpen({ open: false, news: false })}
+            >
+              Rental
+            </Link>
+
+            {/* Coupons */}
+            <Link
+              href="/coupons"
+              className="block text-sm font-semibold hover:text-gray-300"
+              onClick={() => setIsMenuOpen({ open: false, news: false })}
+            >
+              Coupons
+            </Link>
           </div>
         </div>
       )}
