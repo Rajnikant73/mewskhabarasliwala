@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Metadata } from 'next';
 import { Calendar, Clock } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import SidebarNews from '@/components/news/SidebarNews';
@@ -56,13 +57,15 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
 
   return (
     <main className="container mx-auto px-4 py-8">
-      <AdBanner className="mb-8" size="horizontal" />
+      <div className="flex justify-center mb-8">
+        <AdBanner className="w-full max-w-[728px] py-2" size="horizontal" />
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
           <div className="mb-2">
-            <Link 
-              href={`/category/${post._embedded?.['wp:term']?.[0]?.[0]?.slug}`} 
+            <Link
+              href={`/category/${post._embedded?.['wp:term']?.[0]?.[0]?.slug}`}
               className="text-primary hover:underline text-sm font-medium"
             >
               {post._embedded?.['wp:term']?.[0]?.[0]?.name}
@@ -85,11 +88,13 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
             </div>
           </div>
 
-          <AdBanner className="my-6" size="horizontal" />
+          <div className="flex justify-center my-6">
+            <AdBanner className="w-full max-w-[728px] py-2" size="horizontal" />
+          </div>
 
           {post._embedded?.['wp:featuredmedia']?.[0]?.source_url && (
             <div className="relative w-full h-[300px] md:h-[400px] lg:h-[500px] rounded-lg overflow-hidden my-6">
-              <Image 
+              <Image
                 src={post._embedded['wp:featuredmedia'][0].source_url}
                 alt={post.title.rendered}
                 className="object-cover"
@@ -105,12 +110,14 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
 
           <Separator className="my-6" />
 
-          <ShareButtons 
+          <ShareButtons
             url={`https://mewskhabar.com/news/${post.slug}`}
             title={post.title.rendered}
           />
 
-          <AdBanner className="my-8" size="horizontal" />
+          <div className="flex justify-center my-8">
+            <AdBanner className="w-full max-w-[728px] py-2" size="horizontal" />
+          </div>
         </div>
 
         <div className="lg:col-span-1">
