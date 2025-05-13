@@ -4,7 +4,7 @@ import { Metadata } from 'next';
 import { Clock } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { getCategories, getPostsByCategory } from '@/lib/wordpress';
-import { formatDate } from '@/lib/utils';
+import { formatDate, parseHTML } from '@/lib/utils';
 
 export async function generateStaticParams() {
   const categories = await getCategories();
@@ -22,7 +22,7 @@ interface CategoryPageProps {
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const categories = await getCategories();
   const category = categories.find(cat => cat.slug === params.slug);
-
+  
   return {
     title: `${category?.name || 'श्रेणी'} | मेउज खबर`,
     description: category?.description || 'यस श्रेणीका समाचारहरू',
@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const categories = await getCategories();
   const category = categories.find(cat => cat.slug === params.slug);
-
+  
   if (!category) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -46,14 +46,14 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   }
 
   const posts = await getPostsByCategory(category.id, 12);
-
+  
   return (
     <main className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-2">{category.name}</h1>
       <p className="text-muted-foreground mb-6">{category.description}</p>
-
+      
       <Separator className="mb-8" />
-
+      
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {posts.length > 0 ? posts.map((post) => (
           <Link href={`/news/${post.slug}`} key={post.id} className="group">
@@ -68,10 +68,10 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               </div>
               <div className="p-4 flex-1 flex flex-col">
                 <h2 className="font-bold text-lg mb-2 group-hover:text-primary transition-colors">
-                  <span dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
+                  {parseHTML(post.title.rendered)}
                 </h2>
                 <div className="text-muted-foreground text-sm mb-4 line-clamp-2">
-                  <span dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }} />
+                  {parseHTML(post.excerpt.rendered)}
                 </div>
                 <div className="mt-auto flex items-center text-xs text-muted-foreground">
                   <Clock size={12} className="mr-1" />
