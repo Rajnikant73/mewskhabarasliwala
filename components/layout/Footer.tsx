@@ -101,8 +101,8 @@ export default function Footer() {
         </div>
 
         <div className="mt-10 pt-4 border-t border-white/20 text-center text-sm">
-          <p>मेउज खबर — हाम्रो लुम्बिनी, हाम्रो खबर</p>
-        </div>
+  <span>मेउज खबर — हाम्रो लुम्बिनी, हाम्रो खबर</span>
+</div>
       </div>
     </footer>
   );
