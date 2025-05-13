@@ -4,6 +4,7 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
+    unoptimized: true, // 👈 this line is the patch
     remotePatterns: [
       {
         protocol: 'https',
